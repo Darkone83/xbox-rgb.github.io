@@ -1,0 +1,21 @@
+{
+  "name": "XBOX-RGB",
+  "version": "v1.6.2",
+  "images": [
+    {
+      "src": "images/dc.png",
+      "label": "Darkone Customs"
+    }
+  ],
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        {
+          "path": "XBOX-RGB.bin",
+          "offset": 0
+        }
+      ]
+    }
+  ]
+}

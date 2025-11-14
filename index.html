@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+
+    <!-- PROJECT: Tab title -->
+    <title>Darkone Customs – XBOX-RGB ESP Web Flasher</title>
+
+    <!-- ESP Web Tools -->
+    <script
+      type="module"
+      src="https://unpkg.com/esp-web-tools@9.0.3/dist/web/install-button.js?module">
+    </script>
+
+    <style>
+      :root {
+        --bg: #020617;
+        --panel: #0b1120;
+        --border: #1f2937;
+        --accent: #f97316;
+        --accent-soft: rgba(249, 115, 22, 0.16);
+        --text-main: #f9fafb;
+        --text-muted: #9ca3af;
+        --danger: #f87171;
+        --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: var(--font);
+        background: radial-gradient(circle at top, #111827 0, #020617 60%);
+        color: var(--text-main);
+      }
+
+      main.app {
+        width: 100%;
+        max-width: 960px;
+        margin: 24px;
+        background: var(--panel);
+        border-radius: 14px;
+        border: 1px solid rgba(148, 163, 184, 0.32);
+        box-shadow:
+          0 24px 50px rgba(0, 0, 0, 0.7),
+          0 0 0 1px rgba(15, 23, 42, 0.95);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+
+      header.header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 14px;
+        border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+        background: #020617;
+      }
+
+      .logo-wrap {
+        width: 36px;
+        height: 36px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: radial-gradient(circle at 30% 0, #f97316, #7c2d12);
+        box-shadow:
+          0 0 0 1px rgba(15, 23, 42, 0.9),
+          0 0 30px rgba(249, 115, 22, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .logo-wrap img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+      }
+
+      .brand-main {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .brand-sub {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .tag-pill {
+        margin-left: auto;
+        font-size: 11px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.6);
+        color: var(--text-muted);
+        background: #020617;
+        white-space: nowrap;
+      }
+
+      section.body {
+        padding: 12px 14px 10px;
+      }
+
+      .title-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .heading {
+        font-size: 17px;
+        font-weight: 600;
+      }
+
+      .version {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 12px;
+      }
+
+      @media (max-width: 800px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .panel {
+        background: #020617;
+        border-radius: 10px;
+        border: 1px solid var(--border);
+        padding: 10px;
+      }
+
+      .panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      .panel-title {
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+      }
+
+      .panel-sub {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .pill {
+        font-size: 11px;
+        padding: 3px 8px;
+        border-radius: 999px;
+        border: 1px solid rgba(148, 163, 184, 0.5);
+        color: var(--text-muted);
+      }
+
+      .field-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+        flex-wrap: wrap;
+      }
+
+      label {
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+
+      select {
+        min-width: 220px;
+        font-size: 12px;
+        padding: 4px 6px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+        background: #020617;
+        color: var(--text-main);
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 1px var(--accent-soft);
+      }
+
+      .button-row {
+        margin: 8px 0 6px;
+      }
+
+      .primary-btn {
+        border: none;
+        border-radius: 999px;
+        padding: 7px 18px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        background: linear-gradient(135deg, #f97316, #ea580c);
+        color: #111827;
+        box-shadow:
+          0 0 0 1px rgba(15, 23, 42, 0.9),
+          0 14px 30px rgba(249, 115, 22, 0.4);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .primary-btn:hover {
+        background: linear-gradient(135deg, #fb923c, #f97316);
+        transform: translateY(-1px);
+      }
+
+      .primary-btn:active {
+        transform: translateY(0);
+        box-shadow:
+          0 0 0 1px rgba(15, 23, 42, 0.9),
+          0 8px 24px rgba(249, 115, 22, 0.35);
+      }
+
+      .unsupported {
+        display: inline-block;
+        font-size: 11px;
+        color: var(--danger);
+        background: rgba(248, 113, 113, 0.12);
+        border-radius: 999px;
+        padding: 4px 8px;
+        border: 1px solid rgba(248, 113, 113, 0.7);
+      }
+
+      .info-list {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin: 4px 0 0;
+        padding-left: 16px;
+      }
+
+      .info-list li {
+        margin-bottom: 3px;
+      }
+
+      .callout {
+        margin-top: 8px;
+        font-size: 11px;
+        color: var(--danger);
+        background: rgba(248, 113, 113, 0.08);
+        border-radius: 6px;
+        padding: 6px 8px;
+        border: 1px solid rgba(248, 113, 113, 0.36);
+      }
+
+      footer.footer {
+        padding: 6px 14px 10px;
+        border-top: 1px solid rgba(55, 65, 81, 0.9);
+        font-size: 11px;
+        color: var(--text-muted);
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 8px;
+        background: #020617;
+      }
+
+      footer a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+    </style>
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <!-- PROJECT: swap logo if needed; keep under /images -->
+        <div class="logo-wrap">
+          <img src="images/dc.png" alt="Darkone Customs logo" />
+        </div>
+        <div class="brand">
+          <!-- PROJECT: branding lines -->
+          <div class="brand-main">DARKONE CUSTOMS</div>
+          <div class="brand-sub">XBOX-RGB / ESP32 Web Flasher</div>
+        </div>
+        <div class="tag-pill">ESP32 · ESP32-S3 · WebSerial</div>
+      </header>
+
+      <section class="body">
+        <div class="title-row">
+          <!-- PROJECT: heading + version text -->
+          <div class="heading">Browser-based ESP flasher</div>
+          <div class="version">Current firmware: v1.6.1</div>
+        </div>
+
+        <div class="layout">
+          <!-- LEFT: controls -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">Flashing controls</div>
+                <div class="panel-sub">
+                  Select the correct board below. Each option uses its own
+                  manifest and layout.
+                </div>
+              </div>
+              <span class="pill">Log shown during flash</span>
+            </div>
+
+            <div class="field-row">
+              <!-- PROJECT: add more options later; hook JS below -->
+              <label for="profile">Board:</label>
+              <select id="profile">
+                <option value="esp32s3" selected>ESP32-S3 – XBOX-RGB</option>
+              </select>
+            </div>
+
+            <div class="button-row">
+              <!-- manifest is set dynamically in JS based on board selection -->
+              <esp-web-install-button
+                id="installer"
+                manifest="firmware/manifest_esp32s3.json"
+                show-log>
+                <button slot="activate" class="primary-btn">
+                  Program device
+                </button>
+                <span slot="unsupported" class="unsupported">
+                  This browser does not support WebSerial. Use Chrome or Edge
+                  on desktop.
+                </span>
+              </esp-web-install-button>
+            </div>
+
+            <ul class="info-list">
+              <li>
+                Make sure the selected board matches the hardware you have
+                connected.
+              </li>
+              <li>Flashes Type_D firmware at address 0x0000.</li>
+              <li>Flashes FFat filesystem image at address 0x410000.</li>
+            </ul>
+
+            <div class="callout">
+              Flashing will overwrite the existing firmware and FFat partition
+              on the device. Back up any custom files or settings before you
+              continue.
+            </div>
+          </div>
+
+          <!-- RIGHT: instructions -->
+          <div class="panel">
+            <div class="panel-header">
+              <div>
+                <div class="panel-title">How to use</div>
+                <div class="panel-sub">
+                  Recommended for production units and end-users.
+                </div>
+              </div>
+            </div>
+
+            <div class="panel-sub" style="margin-bottom: 4px;">
+              Before you start:
+            </div>
+            <ul class="info-list">
+              <li>Use a known-good USB data cable.</li>
+              <li>Close other serial tools (Arduino IDE, VS Code, etc.).</li>
+              <li>
+                If your board has BOOT / EN buttons, be ready to hold BOOT when
+                the browser asks.
+              </li>
+            </ul>
+
+            <div class="panel-sub" style="margin: 8px 0 4px;">
+              Flashing steps:
+            </div>
+            <ul class="info-list">
+              <li>Select ESP32-S3 or ESP32 from the drop-down.</li>
+              <li>Click <strong>Program device</strong>.</li>
+              <li>Select your ESP board from the port list.</li>
+              <li>Watch the log window for erase/write progress.</li>
+              <li>
+                When it finishes, press RESET or power-cycle the device to boot
+                the new firmware.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <span>Works on Chrome &amp; Edge (desktop) with WebSerial.</span>
+        <span>
+          Documentation &amp; source:&nbsp;
+          <a
+            href="https://github.com/Darkone83/XBOX-RGB"
+            target="_blank"
+            rel="noreferrer">
+            github.com/Darkone83/XBOX-RGB
+          </a>
+        </span>
+      </footer>
+    </main>
+
+    <script>
+      // Board selection -> choose the correct manifest file
+      const profileSelect = document.getElementById("profile");
+      const installer = document.getElementById("installer");
+
+      function updateManifest() {
+        switch (profileSelect.value) {
+          case "esp32s3":
+          default:
+            installer.setAttribute(
+              "manifest",
+              "firmware/manifest_esp32s3.json"
+            );
+            break;
+        }
+      }
+
+      profileSelect.addEventListener("change", updateManifest);
+      // Initialise on load
+      updateManifest();
+    </script>
+  </body>
+</html>
